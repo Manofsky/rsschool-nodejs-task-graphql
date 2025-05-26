@@ -1,5 +1,6 @@
 import { Type } from '@fastify/type-provider-typebox';
 import {
+  GraphQLSchema,
   GraphQLObjectType,
   GraphQLString,
   GraphQLList,
@@ -116,20 +117,20 @@ const UserType = new GraphQLObjectType<User, GqlContext>({
     userSubscribedTo: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(UserType))),
       resolve: async (parent: User, _args, context: GqlContext) => {
-        const subscriptions = await context.prisma.subscribersOnAuthors.findMany({
+        const subscriptions = (await context.prisma.subscribersOnAuthors.findMany({
           where: { subscriberId: parent.id },
           include: { author: true },
-        }) as UserSubscriptionWithAuthor[];
+        })) as UserSubscriptionWithAuthor[];
         return subscriptions.map((sub) => sub.author);
       },
     },
     subscribedToUser: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(UserType))),
       resolve: async (parent: User, _args, context: GqlContext) => {
-        const subscribers = await context.prisma.subscribersOnAuthors.findMany({
+        const subscribers = (await context.prisma.subscribersOnAuthors.findMany({
           where: { authorId: parent.id },
           include: { subscriber: true },
-        }) as UserSubscriptionWithSubscriber[];
+        })) as UserSubscriptionWithSubscriber[];
         return subscribers.map((sub) => sub.subscriber);
       },
     },
@@ -208,4 +209,8 @@ const QueryType = new GraphQLObjectType({
       },
     },
   }),
+});
+
+export const schema = new GraphQLSchema({
+  query: QueryType,
 });
