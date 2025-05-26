@@ -165,7 +165,7 @@ const QueryType = new GraphQLObjectType({
       },
     },
     user: {
-      type: UserType,
+      type: UserType as GraphQLObjectType<User, GqlContext>,
       args: {
         id: { type: new GraphQLNonNull(UUIDType) },
       },
