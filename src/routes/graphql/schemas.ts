@@ -272,7 +272,11 @@ const MutationType = new GraphQLObjectType({
       args: {
         dto: { type: new GraphQLNonNull(CreateUserInput) },
       },
-      resolve: async (_source, args: { dto: any }, context: GqlContext) => {
+      resolve: async (
+        _source,
+        args: { dto: { name: string; balance: number } },
+        context: GqlContext,
+      ) => {
         return context.prisma.user.create({
           data: args.dto,
         });
@@ -283,7 +287,11 @@ const MutationType = new GraphQLObjectType({
       args: {
         dto: { type: new GraphQLNonNull(CreateProfileInput) },
       },
-      resolve: async (_source, args: { dto: any }, context: GqlContext) => {
+      resolve: async (
+        _source,
+        args: { dto: { isMale: boolean; yearOfBirth: number; userId: string; memberTypeId: MemberTypeId } },
+        context: GqlContext,
+      ) => {
         return context.prisma.profile.create({
           data: args.dto,
         });
@@ -294,7 +302,11 @@ const MutationType = new GraphQLObjectType({
       args: {
         dto: { type: new GraphQLNonNull(CreatePostInput) },
       },
-      resolve: async (_source, args: { dto: any }, context: GqlContext) => {
+      resolve: async (
+        _source,
+        args: { dto: { title: string; content: string; authorId: string } },
+        context: GqlContext
+      ) => {
         return context.prisma.post.create({
           data: args.dto,
         });
@@ -306,7 +318,11 @@ const MutationType = new GraphQLObjectType({
         id: { type: new GraphQLNonNull(UUIDType) },
         dto: { type: new GraphQLNonNull(ChangeUserInput) },
       },
-      resolve: async (_source, args: { id: string; dto: any }, context: GqlContext) => {
+      resolve: async (
+        _source,
+        args: { id: string; dto: { name?: string; balance?: number } },
+        context: GqlContext,
+      ) => {
         return context.prisma.user.update({
           where: { id: args.id },
           data: args.dto,
@@ -319,7 +335,11 @@ const MutationType = new GraphQLObjectType({
         id: { type: new GraphQLNonNull(UUIDType) },
         dto: { type: new GraphQLNonNull(ChangeProfileInput) },
       },
-      resolve: async (_source, args: { id: string; dto: any }, context: GqlContext) => {
+      resolve: async (
+        _source,
+        args: { id: string; dto: { isMale?: boolean; yearOfBirth?: number; memberTypeId?: MemberTypeId } },
+        context: GqlContext
+      ) => {
         return context.prisma.profile.update({
           where: { id: args.id },
           data: args.dto,
@@ -332,7 +352,11 @@ const MutationType = new GraphQLObjectType({
         id: { type: new GraphQLNonNull(UUIDType) },
         dto: { type: new GraphQLNonNull(ChangePostInput) },
       },
-      resolve: async (_source, args: { id: string; dto: any }, context: GqlContext) => {
+      resolve: async (
+        _source,
+        args: { id: string; dto: { title?: string; content?: string } },
+        context: GqlContext
+      ) => {
         return context.prisma.post.update({
           where: { id: args.id },
           data: args.dto,
